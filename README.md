@@ -4,6 +4,7 @@ CARMA ROLE DASHBOARD WITH LOGIN AND SIGN UP
 =======
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+>>>>>>> ebf6e86 (Initial commit: Setup database and authentication logic)
 ## Getting Started
 
 First, run the development server:

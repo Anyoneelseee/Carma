@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUserRole } from "@/lib/auth";
+import { getUserRole } from "@/lib/auth";  // ✅ Ensure correct import
 import { supabase } from "@/lib/supabase";
 import "@/styles/ChooseRole.css"; 
 
@@ -12,41 +12,42 @@ export default function ChooseRole() {
 
   useEffect(() => {
     const checkRole = async () => {
-      const role = await getUserRole();
-      if (role !== null) { // ✅ Only redirect if role is explicitly set
-        router.push(`/dashboard/${role}`);
+      try {
+        const role = await getUserRole();
+        if (role) {
+          router.push(`/dashboard/${role}`);
+        }
+      } catch (error) {
+        console.error("Error fetching role:", error);
       }
     };
+
     checkRole();
   }, [router]);
-  
 
   const selectRole = async (role: string) => {
     setLoading(true);
     const { data: authData, error } = await supabase.auth.getUser();
-  
+
     if (error || !authData?.user) {
       router.push("/login");
       return;
     }
-  
-    // ✅ Ensure the role is updated only when the user chooses
+
     const { error: updateError } = await supabase
       .from("users")
       .update({ role })
       .eq("id", authData.user.id)
       .select();
-  
+
     if (updateError) {
       console.error(updateError.message);
       setLoading(false);
       return;
     }
-  
+
     router.push(`/dashboard/${role}`);
   };
-  
-  
 
   return (
     <div className="role-container">
